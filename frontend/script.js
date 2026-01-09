@@ -1,5 +1,9 @@
- const API_URL = 'https://programming-quiz-6x7a.onrender.com';  
- // const API_URL = 'http://localhost:5000/api';
+// Auto-detect if running locally or in production
+const API_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:5000/api'
+    : `${window.location.origin}/api`;
+
+console.log('Using API URL:', API_URL);
 
 let questions = [];
 let currentQuestionIndex = 0;
@@ -16,16 +20,28 @@ async function loadQuestions() {
     language = getLanguageFromURL();
     
     if (!language) {
+        console.error('No language specified in URL');
         window.location.href = 'index.html';
         return;
     }
     
+    console.log('Loading questions for language:', language);
+    
     try {
-        const response = await fetch(`${API_URL}/questions/${language}`);
+        const url = `${API_URL}/questions/${language}`;
+        console.log('Fetching from:', url);
+        
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         questions = await response.json();
+        console.log('Questions loaded:', questions.length);
         
         if (questions.length === 0) {
-            alert('No questions available for this language yet!');
+            alert(`No questions available for ${language} yet! Please add questions to the database.`);
             window.location.href = 'index.html';
             return;
         }
@@ -36,7 +52,10 @@ async function loadQuestions() {
         displayQuestion();
     } catch (error) {
         console.error('Error loading questions:', error);
-        alert('Failed to load questions. Please try again.');
+        alert(`Failed to load questions: ${error.message}\n\nCheck console for details (F12)`);
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 2000);
     }
 }
 
@@ -116,5 +135,6 @@ function goBack() {
 
 // Initialize quiz on page load
 if (window.location.pathname.includes('quiz.html')) {
+    console.log('Quiz page loaded, initializing...');
     loadQuestions();
 }

@@ -17,22 +17,39 @@
             <h2>Select a Language</h2>
             <div class="languages-grid" id="languagesGrid">
                 <!-- Languages will be loaded dynamically -->
+                <div class="loading">Loading languages...</div>
             </div>
         </div>
     </div>
 
     <script>
-        const API_URL = 'https://programming-quiz-6x7a.onrender.com'; 
-        // const API_URL = 'http://localhost:5000/api';
-        // Fetch available languages
+        // Auto-detect if running locally or in production
+        const API_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:5000/api'
+            : `${window.location.origin}/api`;
 
+        console.log('Using API URL:', API_URL);
+
+        // Fetch available languages
         async function loadLanguages() {
             try {
+                console.log('Fetching languages from:', `${API_URL}/languages`);
                 const response = await fetch(`${API_URL}/languages`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const languages = await response.json();
+                console.log('Languages loaded:', languages);
                 
                 const languagesGrid = document.getElementById('languagesGrid');
                 languagesGrid.innerHTML = '';
+                
+                if (languages.length === 0) {
+                    languagesGrid.innerHTML = '<p style="color: white; text-align: center;">No languages available yet. Please add questions to the database.</p>';
+                    return;
+                }
                 
                 languages.forEach((language, index) => {
                     const card = document.createElement('div');
@@ -47,6 +64,14 @@
                 });
             } catch (error) {
                 console.error('Error loading languages:', error);
+                const languagesGrid = document.getElementById('languagesGrid');
+                languagesGrid.innerHTML = `
+                    <div style="color: white; text-align: center; padding: 20px;">
+                        <p>❌ Error loading languages</p>
+                        <p style="font-size: 0.9rem; opacity: 0.7;">${error.message}</p>
+                        <p style="margin-top: 10px;">Check console for details (F12)</p>
+                    </div>
+                `;
             }
         }
 

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <button class="back-btn" onclick="goBack()">← Back</button>
+                <h2 id="languageTitle"></h2>
+                <div class="progress">
+                    <span id="currentQuestion">1</span> / <span id="totalQuestions">10</span>
+                </div>
+            </div>
+
+            <div class="question-container">
+                <h3 class="question" id="question"></h3>
+                <div class="options" id="options"></div>
+            </div>
+
+            <div class="completion-screen" id="completionScreen">
+                <div class="completion-content">
+                    <div class="trophy">🏆</div>
+                    <h2>Quiz Completed!</h2>
+                    <p>Great job completing the quiz!</p>
+                    <button class="btn-primary" onclick="goBack()">Try Another Language</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

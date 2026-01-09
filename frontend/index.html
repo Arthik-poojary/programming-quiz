@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programming Quiz</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Programming Quiz</h1>
+            <p class="subtitle">Test your programming knowledge</p>
+        </div>
+        
+        <div class="languages-container" id="languagesContainer">
+            <h2>Select a Language</h2>
+            <div class="languages-grid" id="languagesGrid">
+                <!-- Languages will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5000/api';
+
+        // Fetch available languages
+        async function loadLanguages() {
+            try {
+                const response = await fetch(`${API_URL}/languages`);
+                const languages = await response.json();
+                
+                const languagesGrid = document.getElementById('languagesGrid');
+                languagesGrid.innerHTML = '';
+                
+                languages.forEach((language, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'language-card';
+                    card.style.animationDelay = `${index * 0.1}s`;
+                    card.innerHTML = `
+                        <div class="language-icon">${getLanguageIcon(language)}</div>
+                        <h3>${language}</h3>
+                    `;
+                    card.onclick = () => startQuiz(language);
+                    languagesGrid.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error loading languages:', error);
+            }
+        }
+
+        function getLanguageIcon(language) {
+            const icons = {
+                'Python': '🐍',
+                'JavaScript': '⚡',
+                'C': '©️',
+                'HTML': '🌐',
+                'CSS': '🎨',
+                'Java': '☕',
+                'C++': '⚙️',
+                'Ruby': '💎',
+                'PHP': '🐘',
+                'Go': '🔷'
+            };
+            return icons[language] || '📝';
+        }
+
+        function startQuiz(language) {
+            window.location.href = `quiz.html?language=${encodeURIComponent(language)}`;
+        }
+
+        // Load languages on page load
+        loadLanguages();
+    </script>
+</body>
+</html>

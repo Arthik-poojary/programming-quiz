@@ -1,4 +1,5 @@
- const API_URL = 'http://localhost:5000/api';//'https://programming-quiz-6x7a.onrender.com';
+ const API_URL = 'https://programming-quiz-6x7a.onrender.com';  
+ // const API_URL = 'http://localhost:5000/api';
 
 let questions = [];
 let currentQuestionIndex = 0;
